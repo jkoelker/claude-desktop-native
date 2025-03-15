@@ -1,7 +1,6 @@
 # Claude Desktop Native for Arch Linux
 
-[!NOTE]
-
+>[!NOTE]
 > This is a community-maintained package and is not affiliated with Anthropic. Use at your own risk.
 
 This repo provides Claude Desktop running natively on Arch Linux.
