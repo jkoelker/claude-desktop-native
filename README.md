@@ -11,18 +11,19 @@ There are other community-maintained packages for other distributions:
 
 This package is based on the approach from [k3d3/claude-desktop-linux-flake](https://github.com/k3d3/claude-desktop-linux-flake), who developed the [patchy-cnb](https://github.com/k3d3/claude-desktop-linux-flake/tree/main/patchy-cnb) library.
 
-[NixOS](https://github.com/k3d3/claude-desktop-linux-flake)
-
+[NixOS](https://github.com/k3d3/claude-desktop-linux-flake)  
 - [k3d3/claude-desktop-linux-flake](https://github.com/k3d3/claude-desktop-linux-flake)
-  [Debian](https://github.com/aaddrick/claude-desktop-debian)
-- [aaddrick/claude-desktop-debian](https://github.com/aaddrick/claude-desktop-debian)
+
+[Debian](https://github.com/aaddrick/claude-desktop-debian)  
+- [aaddrick/claude-desktop-debian](https://github.com/aaddrick/claude-desktop-debian)  
   - Looking for a new maintainer. Please contribute to their cause if you are interested!
-    [Ubuntu](https://github.com/hanpham32/claude-desktop-linux-installer)
-- [hanpham32/claude-desktop-linux-installer](https://github.com/hanpham32/claude-desktop-linux-installer)
+
+[Ubuntu](https://github.com/hanpham32/claude-desktop-linux-installer)  
+- [hanpham32/claude-desktop-linux-installer](https://github.com/hanpham32/claude-desktop-linux-installer)  
 
 ## Description
 
-[Claude Desktop](https://claude.ai/download) is an Electron-based desktop application for using Anthropic's [Claude AI assistant] (<https://claude.ai>). Currently Claude Desktop is in beta and is only available for [Windows](https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe) and [MacOS](https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest/Claude.dmg).
+[Claude Desktop](https://claude.ai/download) is an Electron-based desktop application for using Anthropic's [Claude AI assistant](<https://claude.ai>). Currently Claude Desktop is in beta and is only available for [Windows](https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe) and [MacOS](https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest/Claude.dmg).
 
 ## Implementation Details
 
