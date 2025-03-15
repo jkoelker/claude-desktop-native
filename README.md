@@ -6,6 +6,12 @@
 
 An unofficial AUR package that brings Claude Desktop to Arch Linux natively, allowing you to use Anthropic's AI assistant on your Linux machine.
 
+## ⚠️ Important Attribution
+
+**This package relies entirely on the patchy-cnb library, which was created by [k3d3](https://github.com/k3d3) as part of the [claude-desktop-linux-flake](https://github.com/k3d3/claude-desktop-linux-flake) project.** 
+
+This AUR package is simply packaging that work for Arch Linux users. All credit for the technical solution that makes this possible belongs to k3d3.
+
 ## Quick Install
 
 ```bash
@@ -24,7 +30,7 @@ makepkg -si
 ## Features
 
 - Run Claude Desktop natively on Arch Linux
-- Uses modified native bindings for Linux compatibility
+- Uses modified native bindings for Linux compatibility (via patchy-cnb by k3d3)
 - Preserves all functionality of the official Claude Desktop application
 - Integrates with the Linux desktop environment (icons, shortcuts, etc.)
 
@@ -34,10 +40,10 @@ The official Claude Desktop application is available only for Windows and macOS.
 
 1. Downloads the official Windows executable
 2. Extracts the Electron application files
-3. Replaces Windows-specific native bindings with Linux-compatible ones using the [patchy-cnb](https://github.com/claude-desktop-native/patchy-cnb) library
+3. **Replaces Windows-specific native bindings with Linux-compatible ones using the [patchy-cnb](https://github.com/claude-desktop-native/patchy-cnb) library created by k3d3**
 4. Repackages everything to work with the system's Electron installation
 
-The heavy lifting is done by patchy-cnb, which provides alternative implementations of the native functions the Claude app expects.
+The core functionality is provided by patchy-cnb, which was developed by k3d3 to provide alternative implementations of the native functions the Claude app expects.
 
 ## Dependencies
 
@@ -50,7 +56,7 @@ The heavy lifting is done by patchy-cnb, which provides alternative implementati
 Similar community-maintained packages for other distributions:
 
 ### NixOS
-- [k3d3/claude-desktop-linux-flake](https://github.com/k3d3/claude-desktop-linux-flake) - Original implementation that inspired this project
+- [k3d3/claude-desktop-linux-flake](https://github.com/k3d3/claude-desktop-linux-flake) - **Original implementation that made this possible**
 
 ### Debian
 - [aaddrick/claude-desktop-debian](https://github.com/aaddrick/claude-desktop-debian) - Looking for a new maintainer!
@@ -84,8 +90,10 @@ The build scripts and packaging code are dual-licensed under the MIT License and
 
 Claude Desktop itself is proprietary software owned by Anthropic.
 
+The patchy-cnb library is created by k3d3 and is dual-licensed under MIT and Apache 2.0 licenses.
+
 ## Acknowledgments
 
-- [k3d3](https://github.com/k3d3) for the original work on making Claude Desktop run on Linux
+- **[k3d3](https://github.com/k3d3) for creating patchy-cnb and the original work on making Claude Desktop run on Linux**
 - The Anthropic team for creating Claude
 - The Arch Linux community for their excellent package management system
