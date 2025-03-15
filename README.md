@@ -1,6 +1,11 @@
 # Claude Desktop Native for Arch Linux
 
-<img src="https://anthropic.com/assets/images/social/anthropic-og.jpg" width="400" alt="Claude by Anthropic" />
+![AUR Version](https://img.shields.io/aur/version/claude-desktop-native?style=for-the-badge&logo=archlinux&logoColor=cyan&color=black&labelColor=1793d1)
+![AUR License](https://img.shields.io/aur/license/claude-desktop-native?style=for-the-badge&logo=apache&logoColor=orange&color=black&labelColor=d63031)
+![AUR Votes](https://img.shields.io/aur/votes/claude-desktop-native?style=for-the-badge&logo=thumbsup&logoColor=gold&color=black&labelColor=009432)
+![AUR Popularity](https://img.shields.io/aur/popularity/claude-desktop-native?style=for-the-badge&logo=hotjar&logoColor=yellow&color=black&labelColor=e84118)
+![AUR Maintainer](https://img.shields.io/aur/maintainer/claude-desktop-native?style=for-the-badge&logo=github&logoColor=white&color=black&labelColor=2c3e50)
+![AUR Last Modified](https://img.shields.io/aur/last-modified/claude-desktop-native?style=for-the-badge&logo=linux&logoColor=lime&color=black&labelColor=5f27cd)
 
 > **Note:** This is a community-maintained package and is not affiliated with Anthropic. Use at your own risk.
 
