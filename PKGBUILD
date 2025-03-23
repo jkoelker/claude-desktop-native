@@ -52,7 +52,9 @@ build() {
 
   cd electron-app
   npx asar extract app.asar app.asar.contents
-  sed -i 's|function RIe() {.*return x.app.isPackaged ? mn.resourcesPath : De.resolve(__dirname, "..", "..", "resources")|function RIe() { return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index.js
+  sed -i 's|function RIe(){return x.app.isPackaged?mn.resourcesPath:De.resolve(__dirname,"..","..","resources")|function RIe() { return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index.js
+  # note that the below is replacing i18n with the standard resources directory as that's where the i18n json files wind up
+  sed -i 's|function HD(){return x.app.isPackaged?process.resourcesPath:Ee.resolve(__dirname,"..","..","resources","i18n")|function HD() { return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index.js
 
   # Replace native bindings with patchy-cnb
   pwd
