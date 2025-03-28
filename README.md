@@ -142,7 +142,7 @@ The package build follows these steps:
 
    - Builds the `patchy-cnb` library from source using Rust
    - Replaces Windows-specific `.node` native modules with the newly compiled `patchy-cnb` ones
-   - Replaces the `RIe()` and `HD()` functions of the `.vite/build/index.js` with ones that simply return the absolute path of the resources folder within the applications directory
+   - Replaces the `kIe()` and `qD()` functions of the `.vite/build/index.js` with ones that simply return the absolute path of the resources folder within the applications directory
 
 4. **Packaging Phase**:
    - Organizes files into the proper directory structure

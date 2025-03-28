@@ -1,7 +1,7 @@
 # Maintainer: AstroSteveO <stevengmjr at gmail dot com>
 
 pkgname=claude-desktop-native
-pkgver=0.8.1
+pkgver=0.9.2
 pkgrel=1
 pkgdesc="Unofficial Claude Desktop for Linux"
 arch=('x86_64')
@@ -12,7 +12,7 @@ makedepends=('p7zip' 'npm' 'nodejs' 'rust' 'cargo' 'imagemagick' 'icoutils' 'tar
 optdepends=('docker: for running MCP servers')
 source=("Claude-Setup-x64.exe::https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe"
   "patchy-cnb-1.0.0.tar.gz::https://github.com/claude-desktop-native/patchy-cnb/archive/refs/tags/v1.0.0.tar.gz")
-sha256sums=('f63b5584e409ce95b89c57af7d3a4d9effcbff11ab80a2bd9270192051318ab0'
+sha256sums=('ec448f5491ec6f6cadb1e5ca3e9e5fbccfe721a4c33573f641452e828ea5c2a7'
   'c5bba36cf5d076f61dec3ade072eb61a62818fa2f1584e88cbe8ef775776ca83')
 
 prepare() {
@@ -52,9 +52,9 @@ build() {
 
   cd electron-app
   npx asar extract app.asar app.asar.contents
-  sed -i 's|function RIe(){return x.app.isPackaged?mn.resourcesPath:De.resolve(__dirname,"..","..","resources")|function RIe() { return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index.js
+  sed -i 's|function kIe(){return x.app.isPackaged?gn.resourcesPath:De.resolve(__dirname,"..","..","resources")|function kIe() { return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index.js
   # note that the below is replacing i18n with the standard resources directory as that's where the i18n json files wind up
-  sed -i 's|function HD(){return x.app.isPackaged?process.resourcesPath:Ee.resolve(__dirname,"..","..","resources","i18n")|function HD() { return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index.js
+  sed -i 's|function qD(){return x.app.isPackaged?process.resourcesPath:Ee.resolve(__dirname,"..","..","resources","i18n")|function qD() { return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index.js
 
   # Replace native bindings with patchy-cnb
   pwd
