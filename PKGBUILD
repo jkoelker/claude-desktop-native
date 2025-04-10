@@ -55,6 +55,8 @@ build() {
   sed -i 's|function kIe(){return x.app.isPackaged?gn.resourcesPath:De.resolve(__dirname,"..","..","resources")|function kIe() { return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index.js
   # note that the below is replacing i18n with the standard resources directory as that's where the i18n json files wind up
   sed -i 's|function qD(){return x.app.isPackaged?process.resourcesPath:Ee.resolve(__dirname,"..","..","resources","i18n")|function qD() { return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index.js
+  # fix negation operator to show menubar
+  sed -i -E 's/if\(!([a-zA-Z]+)[[:space:]]*&&[[:space:]]*([a-zA-Z]+)\)/if(\1 \&\& \2)/g' app.asar.contents/.vite/renderer/main_window/assets/MainWindowPage-*.js
 
   # Replace native bindings with patchy-cnb
   pwd
