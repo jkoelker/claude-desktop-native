@@ -2,7 +2,7 @@
 
 pkgname=claude-desktop-native
 pkgver=0.9.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Unofficial Claude Desktop for Linux"
 arch=('x86_64')
 url="https://github.com/claude-desktop-native/claude-desktop-native.git"
@@ -112,6 +112,6 @@ EOF
   # Create launcher script
   install -Dm755 /dev/stdin "${pkgdir}/usr/bin/${pkgname}" <<EOF
 #!/bin/sh
-exec electron /usr/lib/${pkgname}/app.asar "\$@"
+exec electron /usr/lib/${pkgname}/app.asar --gtk-version=3 "\$@"
 EOF
 }
