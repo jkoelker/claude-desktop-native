@@ -20,14 +20,7 @@ This package relies on the `patchy-cnb` library created by [k3d3](https://github
 ## Installation
 
 ```bash
-# Using yay
-yay -S claude-desktop-native
-
-# Using paru
-paru -S claude-desktop-native
-
-# Manual installation
-git clone https://aur.archlinux.org/claude-desktop-native.git
+git clone https://github.com/jkoelker/claude-desktop-native/
 cd claude-desktop-native
 makepkg -si
 ```
