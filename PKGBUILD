@@ -1,7 +1,7 @@
 # Maintainer: AstroSteveO <stevengmjr at gmail dot com>
 
 pkgname=claude-desktop-native
-pkgver=0.9.4
+pkgver=0.10.14
 pkgrel=1
 pkgdesc="Unofficial Claude Desktop for Linux"
 arch=('x86_64')
@@ -12,7 +12,7 @@ makedepends=('p7zip' 'npm' 'nodejs' 'rust' 'cargo' 'imagemagick' 'icoutils' 'tar
 optdepends=('docker: for running MCP servers')
 source=("Claude-Setup-x64.exe::https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe"
   "patchy-cnb-1.0.0.tar.gz::https://github.com/claude-desktop-native/patchy-cnb/archive/refs/tags/v1.0.0.tar.gz")
-sha256sums=('3a87d7b1135506e7a27b00827d83b01aa96c644098b565914e0e16bbe8460271'
+sha256sums=('36d100dbb6545528be2ef2c7a0a50e01231570edb6afe419d3e978e8e312466f'
   'c5bba36cf5d076f61dec3ade072eb61a62818fa2f1584e88cbe8ef775776ca83')
 
 prepare() {
@@ -25,6 +25,15 @@ prepare() {
   # Extract installer exe and nupkg
   7z x -y "Claude-Setup-x64.exe"
   7z x -y "AnthropicClaude-${pkgver}-full.nupkg"
+
+  # Verify version matches what's in the nuspec file
+  if [ -f "AnthropicClaude.nuspec" ]; then
+    NUSPEC_VERSION=$(grep -oP '<version>\K[^<]+' "AnthropicClaude.nuspec")
+    if [ "$NUSPEC_VERSION" != "$pkgver" ]; then
+      echo "WARNING: PKGBUILD version ($pkgver) does not match nuspec version ($NUSPEC_VERSION)"
+      echo "Please update pkgver in PKGBUILD to: $NUSPEC_VERSION"
+    fi
+  fi
 
   # Extract icons from claude.exe
   wrestool -x -t 14 lib/net45/claude.exe -o claude.ico
