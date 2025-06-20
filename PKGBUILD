@@ -1,7 +1,7 @@
 # Maintainer: AstroSteveO <stevengmjr at gmail dot com>
 
 pkgname=claude-desktop-native
-pkgver=0.10.14
+pkgver=0.10.38
 pkgrel=1
 pkgdesc="Unofficial Claude Desktop for Linux"
 arch=('x86_64')
@@ -12,7 +12,7 @@ makedepends=('p7zip' 'npm' 'nodejs' 'rust' 'cargo' 'imagemagick' 'icoutils' 'tar
 optdepends=('docker: for running MCP servers')
 source=("Claude-Setup-x64.exe::https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe"
   "patchy-cnb-1.0.0.tar.gz::https://github.com/claude-desktop-native/patchy-cnb/archive/refs/tags/v1.0.0.tar.gz")
-sha256sums=('36d100dbb6545528be2ef2c7a0a50e01231570edb6afe419d3e978e8e312466f'
+sha256sums=('4515dad4f08704e31d48a70216be2b9aacd606203f7b34aecfe99685cd336e41'
   'c5bba36cf5d076f61dec3ade072eb61a62818fa2f1584e88cbe8ef775776ca83')
 
 prepare() {
