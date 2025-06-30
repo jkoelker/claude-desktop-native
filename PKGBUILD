@@ -1,7 +1,7 @@
 # Maintainer: AstroSteveO <stevengmjr at gmail dot com>
 
 pkgname=claude-desktop-native
-pkgver=0.10.38
+pkgver=0.11.6
 pkgrel=1
 pkgdesc="Unofficial Claude Desktop for Linux"
 arch=('x86_64')
@@ -12,7 +12,7 @@ makedepends=('p7zip' 'npm' 'nodejs' 'rust' 'cargo' 'imagemagick' 'icoutils' 'tar
 optdepends=('docker: for running MCP servers')
 source=("Claude-Setup-x64.exe::https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe"
   "patchy-cnb-1.0.0.tar.gz::https://github.com/claude-desktop-native/patchy-cnb/archive/refs/tags/v1.0.0.tar.gz")
-sha256sums=('4515dad4f08704e31d48a70216be2b9aacd606203f7b34aecfe99685cd336e41'
+sha256sums=('c394eb663e3bae82a138c80e448d1e378346599480bac56a1c7623e89cd14c8d'
   'c5bba36cf5d076f61dec3ade072eb61a62818fa2f1584e88cbe8ef775776ca83')
 
 prepare() {
@@ -61,9 +61,9 @@ build() {
 
   cd electron-app
   npx asar extract app.asar app.asar.contents
-  sed -i 's|return ..app.isPackaged?.*resolve(__dirname,"..","..","resources")|return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index.js
+  sed -i 's|return ..app.isPackaged?.*resolve(__dirname,"..","..","resources")|return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index*.js
   # note that the below is replacing i18n with the standard resources directory as that's where the i18n json files wind up
-  sed -i 's|return ..app.isPackaged?.*resolve(__dirname,"..","..","resources","i18n")|return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index.js
+  sed -i 's|return ..app.isPackaged?.*resolve(__dirname,"..","..","resources","i18n")|return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index*.js
   # fix negation operator to show menubar
   sed -i -E 's/if\(!([a-zA-Z]+)[[:space:]]*&&[[:space:]]*([a-zA-Z]+)\)/if(\1 \&\& \2)/g' app.asar.contents/.vite/renderer/main_window/assets/MainWindowPage-*.js
 
