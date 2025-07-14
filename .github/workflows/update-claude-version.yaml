@@ -1,0 +1,154 @@
+---
+name: Update Claude Version
+
+"on":
+  schedule:
+    - cron: '0 */4 * * *'  # Every 6 hours
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y p7zip-full wget
+
+      - name: Check for new version
+        id: check
+        run: |
+          set -euo pipefail
+
+          # Create temp directory
+          TEMP_DIR=$(mktemp -d)
+          trap "rm -rf $TEMP_DIR" EXIT
+          cd $TEMP_DIR
+
+          # Download exe
+          echo "Downloading Claude-Setup-x64.exe..."
+          wget -q -O Claude-Setup-x64.exe \
+            "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe"
+
+          # Calculate SHA256
+          NEW_SHA256=$(sha256sum Claude-Setup-x64.exe | cut -d' ' -f1)
+          echo "New SHA256: $NEW_SHA256"
+
+          # Get current SHA256 from PKGBUILD
+          cd $GITHUB_WORKSPACE
+          CURRENT_SHA256=$(grep "sha256sums=(" PKGBUILD -A1 | \
+            grep -oE "[a-f0-9]{64}" | head -1)
+          echo "Current SHA256: $CURRENT_SHA256"
+
+          # Check if update needed (based on SHA change)
+          if [ "$NEW_SHA256" = "$CURRENT_SHA256" ]; then
+            echo "update_needed=false" >> $GITHUB_OUTPUT
+            echo "No update needed - SHA256 unchanged"
+            exit 0
+          fi
+
+          # Extract to get version
+          cd $TEMP_DIR
+          echo "SHA256 changed - extracting to find new version..."
+          7z x -y Claude-Setup-x64.exe > /dev/null 2>&1
+
+          # Find version from nupkg
+          NUPKG_FILE=$(find . -name "AnthropicClaude-*-full.nupkg" | head -1)
+          if [ -z "$NUPKG_FILE" ]; then
+            echo "Error: Could not find AnthropicClaude nupkg file"
+            exit 1
+          fi
+
+          NEW_VERSION=$(echo "$NUPKG_FILE" | \
+            sed -E 's/.*AnthropicClaude-([0-9.]+)-full\.nupkg/\1/')
+          echo "Found version: $NEW_VERSION"
+
+          # Verify with nuspec
+          7z x -y "$NUPKG_FILE" > /dev/null 2>&1
+          if [ -f "AnthropicClaude.nuspec" ]; then
+            NUSPEC_VERSION=$(grep -oP '<version>\K[^<]+' \
+              "AnthropicClaude.nuspec")
+            if [ "$NUSPEC_VERSION" != "$NEW_VERSION" ]; then
+              echo "Using nuspec version: $NUSPEC_VERSION"
+              NEW_VERSION="$NUSPEC_VERSION"
+            fi
+          fi
+
+          # Get current version from PKGBUILD
+          cd $GITHUB_WORKSPACE
+          CURRENT_VERSION=$(grep "^pkgver=" PKGBUILD | cut -d'=' -f2)
+          echo "Current version: $CURRENT_VERSION"
+
+          # Set outputs
+          echo "update_needed=true" >> $GITHUB_OUTPUT
+          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+          echo "new_sha256=$NEW_SHA256" >> $GITHUB_OUTPUT
+          echo "current_version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          echo "current_sha256=$CURRENT_SHA256" >> $GITHUB_OUTPUT
+
+      - name: Update PKGBUILD
+        if: steps.check.outputs.update_needed == 'true'
+        run: |
+          # Update version
+          sed -i "s/^pkgver=.*/pkgver=${{ steps.check.outputs.new_version }}/" \
+            PKGBUILD
+
+          # Update SHA256 for exe (first sha256sum)
+          sed -i "/^sha256sums=(/,/)/ \
+            s/'[a-f0-9]\{64\}'/'${{ steps.check.outputs.new_sha256 }}'/" \
+            PKGBUILD
+
+          echo "PKGBUILD updated successfully!"
+
+      - name: Create Pull Request
+        if: steps.check.outputs.update_needed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "github-actions[bot]@users.noreply.github.com"
+
+          # Create branch and commit
+          BRANCH="update-claude-${{ steps.check.outputs.new_version }}"
+          git checkout -b "$BRANCH"
+          git add PKGBUILD
+          git commit -m \
+            "feat(pkgbuild): update to ${{ steps.check.outputs.new_version }}"
+          git push -u origin "$BRANCH"
+
+          # Create PR body
+          cat > pr-body.md <<'EOF'
+          ## Claude Desktop Version Update
+
+          This PR updates Claude Desktop from version \
+          **${{ steps.check.outputs.current_version }}** to \
+          **${{ steps.check.outputs.new_version }}**.
+
+          ### Changes
+          - Updated `pkgver` to ${{ steps.check.outputs.new_version }}
+          - Updated SHA256 checksum for Claude-Setup-x64.exe
+
+          ### Checksums
+          - Old SHA256: `${{ steps.check.outputs.current_sha256 }}`
+          - New SHA256: `${{ steps.check.outputs.new_sha256 }}`
+
+          ---
+          *This PR was automatically generated by the \
+          update-claude-version workflow.*
+          EOF
+
+          VERSION="${{ steps.check.outputs.new_version }}"
+          # Create PR
+          gh pr create \
+            --title "Update Claude Desktop to ${VERSION}" \
+            --body-file pr-body.md \
+            --label "update" \
+            --label "automated" \
