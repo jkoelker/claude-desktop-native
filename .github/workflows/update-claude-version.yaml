@@ -99,9 +99,8 @@ jobs:
           sed -i "s/^pkgver=.*/pkgver=${{ steps.check.outputs.new_version }}/" \
             PKGBUILD
 
-          # Update SHA256 for exe (first sha256sum)
-          sed -i "/^sha256sums=(/,/)/ \
-            s/'[a-f0-9]\{64\}'/'${{ steps.check.outputs.new_sha256 }}'/" \
+          # Update SHA256 for exe (first sha256sum only)
+          sed -i "/^sha256sums=/ s/'[a-f0-9]\{64\}'/'${{ steps.check.outputs.new_sha256 }}'/" \
             PKGBUILD
 
           echo "PKGBUILD updated successfully!"
