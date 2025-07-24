@@ -61,9 +61,10 @@ build() {
 
   cd electron-app
   npx asar extract app.asar app.asar.contents
-  sed -i 's|return ..app.isPackaged?.*resolve(__dirname,"..","..","resources")|return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index*.js
-  # note that the below is replacing i18n with the standard resources directory as that's where the i18n json files wind up
-  sed -i 's|return ..app.isPackaged?.*resolve(__dirname,"..","..","resources","i18n")|return "/usr/lib/'"${pkgname}"'/resources"|' app.asar.contents/.vite/build/index*.js
+  # Fix resource paths - handle different variable names for app object
+  sed -i 's|return[[:space:]]\+[a-zA-Z_][a-zA-Z0-9_]*\.app\.isPackaged[[:space:]]*?[^:]*:[[:space:]]*[a-zA-Z_][a-zA-Z0-9_]*\.resolve([^,]*,[[:space:]]*"\.\.","\.\.","resources")|return "/usr/lib/'"${pkgname}"'/resources"|g' app.asar.contents/.vite/build/index*.js
+  # Fix i18n resource paths specifically
+  sed -i 's|return[[:space:]]\+[a-zA-Z_][a-zA-Z0-9_]*\.app\.isPackaged[[:space:]]*?[^:]*:[[:space:]]*[a-zA-Z_][a-zA-Z0-9_]*\.resolve([^,]*,[[:space:]]*"\.\.","\.\.","resources","i18n")|return "/usr/lib/'"${pkgname}"'/resources"|g' app.asar.contents/.vite/build/index*.js
   # fix negation operator to show menubar
   sed -i -E 's/if\(!([a-zA-Z]+)[[:space:]]*&&[[:space:]]*([a-zA-Z]+)\)/if(\1 \&\& \2)/g' app.asar.contents/.vite/renderer/main_window/assets/MainWindowPage-*.js
 
