@@ -11,16 +11,12 @@ depends=('electron')
 makedepends=('p7zip' 'npm' 'nodejs' 'rust' 'cargo' 'imagemagick' 'icoutils' 'tar')
 optdepends=('docker: for running MCP servers')
 source=("Claude-Setup-x64.exe::https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe"
-  "patchy-cnb-1.0.0.tar.gz::https://github.com/claude-desktop-native/patchy-cnb/archive/refs/tags/v1.0.0.tar.gz")
+  "patchy-cnb::git+https://github.com/k3d3/claude-desktop-linux-flake.git")
 sha256sums=('477ee0bcd7af02f1f1ffb15f5a4ad1209d7d4c755b5745550fc8bb24c5248ae3'
-  'c5bba36cf5d076f61dec3ade072eb61a62818fa2f1584e88cbe8ef775776ca83')
+  'SKIP')
 
 prepare() {
   cd "${srcdir}"
-
-  # Extract the patchy-cnb library
-  echo "Extracting patchy-cnb..."
-  tar -xzf "patchy-cnb-1.0.0.tar.gz"
 
   # Extract installer exe and nupkg
   7z x -y "Claude-Setup-x64.exe"
@@ -49,7 +45,7 @@ prepare() {
 
 build() {
   # Build patchy-cnb (assuming patchy-cnb folder exists at same level as PKGBUILD)
-  cd "${srcdir}/patchy-cnb-1.0.0"
+  cd "${srcdir}/patchy-cnb/patchy-cnb"
   npm install
   npm run build
   cd "${srcdir}"
@@ -70,7 +66,7 @@ build() {
 
   # Replace native bindings with patchy-cnb
   pwd
-  local PATCHY_CNB_NODE=$(find ../patchy-cnb-1.0.0 -name "patchy-cnb.*.node")
+  local PATCHY_CNB_NODE=$(find ../patchy-cnb/patchy-cnb -name "patchy-cnb.*.node")
   cp "${PATCHY_CNB_NODE}" app.asar.contents/node_modules/claude-native/claude-native-binding.node
   cp "${PATCHY_CNB_NODE}" app.asar.unpacked/node_modules/claude-native/claude-native-binding.node
 
