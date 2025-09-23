@@ -19,7 +19,7 @@ prepare() {
   cd "${srcdir}"
 
   # Extract installer exe and nupkg
-  7z x -y "Claude-Setup-x64.exe"
+  7z x -y "Claude-Setup-x64-${pkgver}-${pkgrel}.exe"
   7z x -y "AnthropicClaude-${pkgver}-full.nupkg"
 
   # Verify version matches what's in the nuspec file
