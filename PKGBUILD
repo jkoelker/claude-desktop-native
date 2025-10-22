@@ -2,7 +2,7 @@
 
 pkgname=claude-desktop-native
 pkgver=0.14.4
-pkgrel=2
+pkgrel=1
 pkgdesc="Unofficial Claude Desktop for Linux"
 arch=('x86_64')
 url="https://github.com/claude-desktop-native/claude-desktop-native.git"
