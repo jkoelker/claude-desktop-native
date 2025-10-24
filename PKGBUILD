@@ -63,7 +63,7 @@ build() {
   sed -i 's|return[[:space:]]\+[a-zA-Z_][a-zA-Z0-9_]*\.app\.isPackaged[[:space:]]*?[^:]*:[[:space:]]*[a-zA-Z_][a-zA-Z0-9_]*\.resolve([^,]*,[[:space:]]*"\.\.","\.\.","resources","i18n")|return "/usr/lib/'"${pkgname}"'/resources"|g' app.asar.contents/.vite/build/index*.js
   # fix negation operator to show menubar
   sed -i -E 's/if\(!([a-zA-Z]+)[[:space:]]*&&[[:space:]]*([a-zA-Z]+)\)/if(\1 \&\& \2)/g' app.asar.contents/.vite/renderer/main_window/assets/MainWindowPage-*.js
-  # Fix app root resolution for system Electron: use se.app.getAppPath() instead of process.resourcesPath
+  # MCP: resolve nodeHost.js from app root via require('electron').app.getAppPath(); capture path alias to avoid minified-name drift.
   sed -E -i \
 's|([A-Za-z_$][A-Za-z0-9_$]*)\.join\(\s*process\.resourcesPath\s*,\s*"app\.asar"\s*,\s*"\.vite"\s*,\s*"build"\s*,\s*"mcp-runtime"\s*,\s*"nodeHost\.js"\s*\)|\1.join(require("electron").app.getAppPath(),".vite","build","mcp-runtime","nodeHost.js")|g' \
 app.asar.contents/.vite/build/index*.js
