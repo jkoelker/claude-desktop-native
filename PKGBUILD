@@ -2,7 +2,7 @@
 
 pkgname=claude-desktop-native
 pkgver=0.14.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Unofficial Claude Desktop for Linux"
 arch=('x86_64')
 url="https://github.com/claude-desktop-native/claude-desktop-native.git"
@@ -63,6 +63,8 @@ build() {
   sed -i 's|return[[:space:]]\+[a-zA-Z_][a-zA-Z0-9_]*\.app\.isPackaged[[:space:]]*?[^:]*:[[:space:]]*[a-zA-Z_][a-zA-Z0-9_]*\.resolve([^,]*,[[:space:]]*"\.\.","\.\.","resources","i18n")|return "/usr/lib/'"${pkgname}"'/resources"|g' app.asar.contents/.vite/build/index*.js
   # fix negation operator to show menubar
   sed -i -E 's/if\(!([a-zA-Z]+)[[:space:]]*&&[[:space:]]*([a-zA-Z]+)\)/if(\1 \&\& \2)/g' app.asar.contents/.vite/renderer/main_window/assets/MainWindowPage-*.js
+  # Fix app root resolution for system Electron: use se.app.getAppPath() instead of process.resourcesPath
+  sed -i 's|Be\.join(process\.resourcesPath,"app\.asar",".vite","build","mcp-runtime","nodeHost\.js")|Be.join(se.app.getAppPath(),".vite","build","mcp-runtime","nodeHost.js")|g' app.asar.contents/.vite/build/index*.js
 
   # Replace native bindings with patchy-cnb
   pwd
