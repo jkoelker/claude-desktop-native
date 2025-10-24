@@ -64,7 +64,9 @@ build() {
   # fix negation operator to show menubar
   sed -i -E 's/if\(!([a-zA-Z]+)[[:space:]]*&&[[:space:]]*([a-zA-Z]+)\)/if(\1 \&\& \2)/g' app.asar.contents/.vite/renderer/main_window/assets/MainWindowPage-*.js
   # Fix app root resolution for system Electron: use se.app.getAppPath() instead of process.resourcesPath
-  sed -i 's|Be\.join(process\.resourcesPath,"app\.asar",".vite","build","mcp-runtime","nodeHost\.js")|Be.join(se.app.getAppPath(),".vite","build","mcp-runtime","nodeHost.js")|g' app.asar.contents/.vite/build/index*.js
+  sed -E -i \
+'s|([A-Za-z_$][A-Za-z0-9_$]*)\.join\(\s*process\.resourcesPath\s*,\s*"app\.asar"\s*,\s*"\.vite"\s*,\s*"build"\s*,\s*"mcp-runtime"\s*,\s*"nodeHost\.js"\s*\)|\1.join(require("electron").app.getAppPath(),".vite","build","mcp-runtime","nodeHost.js")|g' \
+app.asar.contents/.vite/build/index*.js
 
   # Replace native bindings with patchy-cnb
   pwd
