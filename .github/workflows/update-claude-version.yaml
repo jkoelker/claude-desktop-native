@@ -95,6 +95,9 @@ jobs:
       - name: Update PKGBUILD
         if: steps.check.outputs.update_needed == 'true'
         run: |
+          # Reset release number for new upstream versions
+          sed -i "s/^pkgrel=.*/pkgrel=1/" PKGBUILD
+
           # Update version
           sed -i "s/^pkgver=.*/pkgver=${{ steps.check.outputs.new_version }}/" \
             PKGBUILD
@@ -104,6 +107,14 @@ jobs:
             PKGBUILD
 
           echo "PKGBUILD updated successfully!"
+
+      - name: Regenerate .SRCINFO
+        if: steps.check.outputs.update_needed == 'true'
+        run: |
+          docker run --rm -v "$PWD":/pkg archlinux:base-devel \
+            bash -lc "useradd -m builder >/dev/null 2>&1 || true; \
+            chown -R builder /pkg; \
+            su builder -s /bin/bash -c 'cd /pkg && makepkg --printsrcinfo > /pkg/.SRCINFO'"
 
       - name: Create Pull Request
         if: steps.check.outputs.update_needed == 'true'
@@ -118,7 +129,7 @@ jobs:
           # Create branch and commit
           BRANCH="update-claude-${{ steps.check.outputs.new_version }}"
           git checkout -b "$BRANCH"
-          git add PKGBUILD
+          git add PKGBUILD .SRCINFO
           git commit -m \
             "feat(pkgbuild): update to ${{ steps.check.outputs.new_version }}"
           git push -u origin "$BRANCH"
