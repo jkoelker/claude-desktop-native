@@ -31,10 +31,28 @@ jobs:
           trap "rm -rf $TEMP_DIR" EXIT
           cd $TEMP_DIR
 
-          # Download exe
-          echo "Downloading Claude-Setup-x64.exe..."
-          wget -q -O Claude-Setup-x64.exe \
-            "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe"
+          # Derive download URL from PKGBUILD to avoid hardcoding
+          cd $GITHUB_WORKSPACE
+          source PKGBUILD
+          PKG_SOURCE_ENTRY="${source[0]}"               # first source= entry
+          BASE_DOWNLOAD_URL="${PKG_SOURCE_ENTRY#*::}"   # strip rename prefix
+          DOWNLOAD_NAME="${PKG_SOURCE_ENTRY%%::*}"      # target filename from PKGBUILD
+          # Fallback if no :: was present
+          if [ "$BASE_DOWNLOAD_URL" = "$PKG_SOURCE_ENTRY" ]; then
+            DOWNLOAD_NAME="Claude-Setup-x64.exe"
+          fi
+
+          # Append cache-busting query param to avoid stale CDN responses
+          CACHE_BUSTER="version=$(date +%s%N)"
+          if [[ "$BASE_DOWNLOAD_URL" == *\?* ]]; then
+            DOWNLOAD_URL="${BASE_DOWNLOAD_URL}&${CACHE_BUSTER}"
+          else
+            DOWNLOAD_URL="${BASE_DOWNLOAD_URL}?${CACHE_BUSTER}"
+          fi
+
+          cd $TEMP_DIR
+          echo "Downloading ${DOWNLOAD_NAME} from ${DOWNLOAD_URL}..."
+          wget -q -O Claude-Setup-x64.exe "$DOWNLOAD_URL"
 
           # Calculate SHA256
           NEW_SHA256=$(sha256sum Claude-Setup-x64.exe | cut -d' ' -f1)
